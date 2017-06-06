@@ -11,6 +11,7 @@ mongoose.connect('mongodb://localhost/articlescraping');
 mongoose.plugin(uniqueValidator); 
 
 var Article = require("../Models/articleScraping.js")
+var Comment =  require("../Models/commentsModel.js")
 
 
 router.get("/", function (req, res) {
@@ -60,6 +61,27 @@ router.get("/", function (req, res) {
             }
         });
     });
+
+    //Retrieve ALL stories from database and render on blog.handlebars
+    Article.find({}, function(err, response){
+        console.log("___________________________________________________________");
+        var data = {
+            articles: response
+        }
+        res.render("blog", data);
+    });
 });
+
+router.post("/addcomment", function(req,res){
+    console.log(req.body);
+    var comment = new Comment({ name: req.body.name, comment: req.body.comment, articleId: req.body.articleId });
+                    comment.save(function (err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("Comment Inserted");
+                        }
+                    });
+})
 
 module.exports = router;
