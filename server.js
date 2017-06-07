@@ -32,7 +32,7 @@ app.set("view engine", "handlebars");
 
 // Routes
 // =============================================================
-var router = require("./Controllers/routes.js");
+var router = require("./controllers/routes.js");
 app.use('/', router);
 
 // Starts the server to begin listening
