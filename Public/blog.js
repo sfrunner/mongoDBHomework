@@ -4,13 +4,13 @@ $(document).ready(function(){
         var articleId = event.target.attributes[2].value;
         $.get("/comments/" + articleId, function(data){
             vex.dialog.alert("");
-            $.each(data, function(i,val){
+            $.each(data[0].comments, function(i,val){
                 var newDIV = $("<div>");
                 var commentHeading = $("<h5>");
                 var userHeading = $("<h6>");
                 var deleteBTN = $("<button>");
                 commentHeading.html(val.comment);
-                userHeading.html("Comment left by " + val.name);
+                userHeading.html("Comment left by " + val.name + " on " + val.dateInserted);
                 deleteBTN.html("Delete Comment");
                 deleteBTN.attr("commentId", val._id);
                 deleteBTN.attr("class", "delete-btn btn-sm");
@@ -63,7 +63,7 @@ vex.dialog.open({
         '</div>',
     ].join(''),
     callback: function (data) {
-        if (data.name == "" || data.comment == "") {
+        if (data.name == null || data.comment == null) {
             return console.log('Cancelled')
         }
         else{

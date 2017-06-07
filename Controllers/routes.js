@@ -2,7 +2,7 @@
 var router = express.Router();
 var cheerio = require("cheerio");
 var request = require("request");
-
+var moment = require("moment");
 var mongoose = require('mongoose');
 
 //Package to Check DB for Unique Values
@@ -27,7 +27,7 @@ router.get("/", function (req, res) {
                     console.log(val.children[0].children[0].children[0].data);
 
                     //Send Data to MongoDB via Mongoose
-                    var article = new Article({ title: val.children[0].children[0].children[0].data, link: val.children[0].children[0].attribs.href });
+                    var article = new Article({ title: val.children[0].children[0].children[0].data, link: val.children[0].children[0].attribs.href, dateInserted: Date.now()});
                     article.save(function (err) {
                         if (err) {
                             console.log(err);
@@ -49,7 +49,7 @@ router.get("/", function (req, res) {
                     console.log(val.children[0].children[0].children[0].data);
 
                     //Send Data to MongoDB via Mongoose
-                    var article = new Article({ title: val.children[0].children[0].children[0].data, link: val.children[0].children[0].attribs.href });
+                    var article = new Article({ title: val.children[0].children[0].children[0].data, link: val.children[0].children[0].attribs.href, dateInserted: Date.now() });
                     article.save(function (err) {
                         if (err) {
                             console.log(err);
@@ -63,7 +63,11 @@ router.get("/", function (req, res) {
     });
 
     //Retrieve ALL stories from database and render on blog.handlebars
-    Article.find({}, function(err, response){
+    Article.find({})
+    .sort({dateInserted: -1})
+    .limit(50)
+    .exec(function(err, response){
+        console.log("exec");
         var data = {
             articles: response
         }
@@ -73,7 +77,11 @@ router.get("/", function (req, res) {
 
 //Retrieve all comments by Article ID
 router.get("/comments/:articleId", function(req,res){
-    Comment.find({"articleId": req.params.articleId}, function(err,response){
+    Article.find({"_id": req.params.articleId})
+    .populate("comments")
+    .exec(function(err,response){
+        console.log(response);
+        console.log("______");
         res.json(response);
     });
 });
@@ -81,12 +89,15 @@ router.get("/comments/:articleId", function(req,res){
 //Add a Comment to DB
 router.post("/addcomment", function(req,res){
     console.log(req.body);
-    var comment = new Comment({ name: req.body.name, comment: req.body.comment, articleId: req.body.articleId });
-                    comment.save(function (err) {
+    var comment = new Comment({ name: req.body.name, comment: req.body.comment, dateInserted: moment().format("LLLL") });
+                    comment.save(function (err,response) {
+                        console.log(response);
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log("Comment Inserted");
+                            Article.findByIdAndUpdate({"_id": req.body.articleId},{$push: {"comments": response._id}}, function(error, response){
+                                console.log("Comment Inserted");
+                            });
                         }
                     });
 });
