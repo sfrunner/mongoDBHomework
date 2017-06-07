@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 
 //Package to Check DB for Unique Values
 var uniqueValidator = require('mongoose-unique-validator');
-mongoose.connect('mongodb://localhost/articlescraping');
+mongoose.connect("mongodb://heroku_fz90mr50:u8cj135p96uqmci17l74u3auai@ds113282.mlab.com:13282/heroku_fz90mr50");
 mongoose.plugin(uniqueValidator); 
 
 //Import Models
@@ -22,9 +22,11 @@ router.get("/", function (req, res) {
         $(".lead-story").children().children().children().each(function (i, val) {
             if (val.children[0].children[0] != null) {
                 if (val.children[0].children[0].name === "a") {
+                    //Testing Link
                     console.log("Link");
                     console.log(val.children[0].children[0].attribs.href);
-                    console.log("Data Summary");
+                    //Testing Title
+                    console.log("Title");
                     console.log(val.children[0].children[0].children[0].data);
 
                     //Send Data to MongoDB via Mongoose

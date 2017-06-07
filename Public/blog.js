@@ -81,6 +81,8 @@ $(document).ready(function(){
                         articleId: event.target.attributes[2].value
                     }
                     $.post("/addcomment", Data);
+                    //Reload The Page to Refresh The Comment Count Upon Submission of the Comment
+                    $(location).attr("href", "/");
                 }
             }
         });
