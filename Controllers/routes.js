@@ -108,10 +108,13 @@ router.post("/addcomment", function(req,res){
     });
 });
 
-//Delete Comment from DB
+//Delete Comment from DB in Both Collections
 router.delete("/deletecomment/:commentId", function(req,res){
     Comment.findByIdAndRemove({"_id": req.params.commentId}, function(error,response){
-        console.log("Comment Deleted");
+        Article.findOneAndUpdate({ "comments": req.params.commentId}, {$pull:{"comments": req.params.commentId}}, function(err,response){
+            console.log(response);
+            console.log("Comment Deleted");
+        });
     });
 });
 

@@ -80,7 +80,14 @@ $(document).ready(function(){
                         comment: data.comment,
                         articleId: event.target.attributes[2].value
                     }
-                    $.post("/addcomment", Data);
+                    //$.post("/addcomment", Data);
+                    $.ajax({
+                        method: "post",
+                        url: "/addcomment",
+                        data: Data
+                    }).done(function(){
+                        console.log("good")
+                    });
                     //Reload The Page to Refresh The Comment Count Upon Submission of the Comment
                     $(location).attr("href", "/");
                 }
