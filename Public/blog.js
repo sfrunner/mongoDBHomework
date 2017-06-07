@@ -13,13 +13,23 @@ $(document).ready(function(){
                 userHeading.html("Comment left by " + val.name);
                 deleteBTN.html("Delete Comment");
                 deleteBTN.attr("commentId", val._id);
-                deleteBTN.attr("class", "btn-sm");
+                deleteBTN.attr("class", "delete-btn btn-sm");
                 newDIV.append(commentHeading);
                 newDIV.append(userHeading);
                 newDIV.append(deleteBTN);
                 $(".vex-dialog-form").append(newDIV);
             });
             });
+        });
+    });
+
+    //Delete Comments
+    $("body").on("click",".delete-btn", function(event){
+        var commentId = event.target.attributes[0].value;
+        $.ajax({
+            method:"delete",
+            url: "/deletecomment/" + commentId,
+            success: vex.dialog.alert("Comment Has Been Deleted")
         });
     });
 

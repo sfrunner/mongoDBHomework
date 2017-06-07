@@ -77,6 +77,7 @@ router.get("/comments/:articleId", function(req,res){
         res.json(response);
     });
 });
+
 //Add a Comment to DB
 router.post("/addcomment", function(req,res){
     console.log(req.body);
@@ -88,6 +89,13 @@ router.post("/addcomment", function(req,res){
                             console.log("Comment Inserted");
                         }
                     });
-})
+});
+
+//Delete Comment from DB
+router.delete("/deletecomment/:commentId", function(req,res){
+    Comment.findByIdAndRemove({"_id": req.params.commentId}, function(error,response){
+        console.log("comment deleted");
+    });
+});
 
 module.exports = router;
