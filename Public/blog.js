@@ -21,7 +21,7 @@ $(document).ready(function(){
                 userHeading.html("Comment left by " + val.name + " on " + val.dateInserted);
                 deleteBTN.html("Delete Comment");
                 deleteBTN.attr("commentId", val._id);
-                deleteBTN.attr("class", "delete-btn btn-sm");
+                deleteBTN.attr("class", "delete-btn btn-sm btn btn-danger");
                 newDIV.append(commentHeading);
                 newDIV.append(userHeading);
                 newDIV.append(deleteBTN);
