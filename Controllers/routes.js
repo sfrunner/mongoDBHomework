@@ -64,7 +64,6 @@ router.get("/", function (req, res) {
 
     //Retrieve ALL stories from database and render on blog.handlebars
     Article.find({}, function(err, response){
-        console.log("___________________________________________________________");
         var data = {
             articles: response
         }
@@ -72,6 +71,13 @@ router.get("/", function (req, res) {
     });
 });
 
+//Retrieve all comments by Article ID
+router.get("/comments/:articleId", function(req,res){
+    Comment.find({"articleId": req.params.articleId}, function(err,response){
+        res.json(response);
+    });
+});
+//Add a Comment to DB
 router.post("/addcomment", function(req,res){
     console.log(req.body);
     var comment = new Comment({ name: req.body.name, comment: req.body.comment, articleId: req.body.articleId });

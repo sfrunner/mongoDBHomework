@@ -1,4 +1,29 @@
 $(document).ready(function(){
+    //View Comments Action
+    $(".viewComments-btn").click(function(event){
+        var articleId = event.target.attributes[2].value;
+        $.get("/comments/" + articleId, function(data){
+            vex.dialog.alert("");
+            $.each(data, function(i,val){
+                var newDIV = $("<div>");
+                var commentHeading = $("<h5>");
+                var userHeading = $("<h6>");
+                var deleteBTN = $("<button>");
+                commentHeading.html(val.comment);
+                userHeading.html("Comment left by " + val.name);
+                deleteBTN.html("Delete Comment");
+                deleteBTN.attr("commentId", val._id);
+                deleteBTN.attr("class", "btn-sm");
+                newDIV.append(commentHeading);
+                newDIV.append(userHeading);
+                newDIV.append(deleteBTN);
+                $(".vex-dialog-form").append(newDIV);
+            });
+            });
+        });
+    });
+
+    //Leave a comment action
     $(".leaveComment-btn").click(function(event){
         console.log(event.target.attributes[2].value);
         todayDateString = new Date().toJSON().slice(0, 10)
@@ -43,4 +68,3 @@ vex.dialog.open({
     }
 });
     });
-});
