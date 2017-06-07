@@ -3,13 +3,19 @@ $(document).ready(function(){
     $(".viewComments-btn").click(function(event){
         var articleId = event.target.attributes[2].value;
         $.get("/comments/" + articleId, function(data){
-            vex.dialog.alert("");
+            vex.dialog.open({
+                message: "Comments",
+                buttons:[
+                    $.extend({},vex.dialog.buttons.NO,{text: "Close Window"})
+                ]
+            });
             $.each(data[0].comments, function(i,val){
                 var newDIV = $("<div>");
                 var commentHeading = $("<h5>");
                 var userHeading = $("<h6>");
                 var deleteBTN = $("<button>");
                 commentHeading.html(val.comment);
+                commentHeading.attr("class", "comment-heading");
                 userHeading.html("Comment left by " + val.name + " on " + val.dateInserted);
                 deleteBTN.html("Delete Comment");
                 deleteBTN.attr("commentId", val._id);
@@ -38,7 +44,7 @@ $(document).ready(function(){
         console.log(event.target.attributes[2].value);
         todayDateString = new Date().toJSON().slice(0, 10)
 vex.dialog.open({
-    message: 'Select a date and color.',
+    message: 'Leave A Comment!',
     input: [
         '<style>',
             '.vex-custom-field-wrapper {',
